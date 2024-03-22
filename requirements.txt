@@ -1,4 +1,3 @@
 questionary
 ruby
-customtkinter
 pytest

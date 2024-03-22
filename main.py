@@ -11,7 +11,7 @@ import os
 tracker = Tracker()
 def cli():
 
-    user_choices = ["Main", "Test", "New", "Exit"]
+    user_choices = ["Main", "Test - with already some stored data", "Exit"]
     exit = False
 
 
@@ -23,17 +23,15 @@ def cli():
     if main_choice == user_choices[0]:
         db_name = 'main.db'
     elif main_choice == user_choices[1]:
-        db_name = 'test.db'
+        db_name = 'test_data.db'
     elif main_choice == user_choices[2]:
-        db_name = questionary.text("What is the name of the new DB?").ask()
-    elif main_choice == user_choices[3]:
         exit = True
 
     db = get_db(db_name)
 
     tracker.update_habits(db)
 
-    choices = ["Create a new habit", "Add completed event", "Analyse", "Exit"]
+    choices = ["Create a new habit", "Delete a habit", "Add completed event", "Analyse", "Exit"]
     periodicity_choices = ["daily", "weekly"]
 
     while not exit:
@@ -51,7 +49,18 @@ def cli():
             else:
                 print(f"Habit {name} already exists")
             print("\n")
+
         elif home_choice == choices[1]:
+            try:
+                habit_selected = questionary.select("Which habit do you want to delete?",
+                                           choices=[habit.name for habit in tracker.habits]).ask()
+                tracker.delete_habit(db, habit_selected)
+                print(f"Habit {habit_selected} deleted")
+            except:
+                print("No habits defined")
+            print("\n")
+
+        elif home_choice == choices[2]:
             try:
                 habit_selected = questionary.select("Which habit do you want to update?",
                                            choices=[habit.name for habit in tracker.habits]).ask()
@@ -70,7 +79,7 @@ def cli():
 
             questionary.press_any_key_to_continue().ask()
 
-        elif home_choice == choices[2]:
+        elif home_choice == choices[3]:
 
             tracker.update_completed(db)
 
@@ -156,12 +165,11 @@ def cli():
                 print("_" * 30)
             questionary.press_any_key_to_continue().ask()
 
-        elif home_choice == choices[3]:
+        elif home_choice == choices[4]:
             db.close()
             exit = True
-        else:
-            print("Invalid choice")
-            db.close()
+
+        print("Goodbye!")
 
 
 if __name__ == "__main__":

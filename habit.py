@@ -1,5 +1,5 @@
 from datetime import datetime
-from db import add_habit, add_event, get_records
+from db import add_habit, add_event, get_records, delete_habit
 
 class Habit:
     """
@@ -29,6 +29,15 @@ class Habit:
         :return: none
         """
         add_habit(db, self.name, self.description, self.periodicity, self.created)
+
+    def delete_habit(self, db):
+        """
+        Delete a habit from the database
+        :param self: self instance
+        :param db: db connection
+        :return: none
+        """
+        delete_habit(db, self.name)
 
     def add_completed(self, db, date=datetime.now()):
         """

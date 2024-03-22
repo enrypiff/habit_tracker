@@ -1,7 +1,7 @@
 from habit import Habit
-from db import get_db, get_habits
+from db import get_habits
 
-from datetime import datetime, timedelta
+from datetime import datetime
 class Tracker:
     """
     Class to represent a tracker
@@ -44,6 +44,19 @@ class Tracker:
             return True
         else:
             return False
+
+    def delete_habit(self, db, name):
+        """
+        Delete a habit from the tracker and the database
+        :param db: db connection
+        :param name: name of the habit
+        :return: none
+        """
+        for i in range(len(self.habits)):
+            if name == self.habits[i].name:
+                self.habits[i].delete_habit(db)
+                del self.habits[i]
+                break
 
     def update_completed(self, db):
         """

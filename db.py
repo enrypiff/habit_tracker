@@ -41,6 +41,20 @@ def add_habit(db, name, description, periodicity, created=datetime.datetime.now(
     cur.execute("INSERT OR IGNORE INTO habits VALUES(?, ?, ?, ?)", (name, description, periodicity, created))
     db.commit()
 
+def delete_habit(db, name):
+    """
+    Delete a habit from the database
+    :param db: db connection
+    :param name: name of the habit
+    :return: none
+    """
+    cur = db.cursor()
+    cur.execute("DELETE FROM habits WHERE name = ?", (name,))
+    db.commit()
+
+    cur.execute("DELETE FROM records WHERE habit_name = ?", (name,))
+    db.commit()
+
 def add_event(db, name, event_date=None):
     """
     Add an event to the tracker
