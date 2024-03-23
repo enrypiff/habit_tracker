@@ -1,5 +1,5 @@
 from datetime import datetime
-from db import add_habit, add_event, get_records, delete_habit
+from .db import add_habit, add_event, get_records, delete_habit
 
 class Habit:
     """
@@ -39,7 +39,7 @@ class Habit:
         """
         delete_habit(db, self.name)
 
-    def add_completed(self, db, date=datetime.now()):
+    def add_completed(self, db, date=datetime.now().date()):
         """
         Add a completed event to the habit and write it in the database
         :param self: self instance
@@ -47,8 +47,13 @@ class Habit:
         :param date: date of the event
         :return: none
         """
+        if not date:
+            date = datetime.now().date()
+        if type(date) is str:
+            date = datetime.strptime(date, "%Y-%m-%d").date()
+
         add_event(db, self.name, date)
-        self.completed.append(datetime.now())
+        self.completed.append(date)
         return True
 
     def get_completed(self, db):
@@ -58,4 +63,4 @@ class Habit:
         :param db: db connection
         :return: none
         """
-        self.completed = [datetime.strptime(c, "%Y-%m-%d") for c in get_records(db, self.name)]
+        self.completed = [datetime.strptime(c, "%Y-%m-%d").date() for c in get_records(db, self.name)]

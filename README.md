@@ -22,4 +22,18 @@ python main.py
 
 The app will start and you can start tracking your habits.
 
+To test the app, run the following command in the terminal:
+
+```bash
+python pytest .
+```
+
+This will run the tests and show you the results.
+
+In the main.db you will find the database that the app uses to store the habits.
+It contains some predefined habits that you can use to test the app.
+If you want to start fresh, you can delete the main.db file and the app will create a new one for you.
+
+
+
 Enjoy!

@@ -1,15 +1,11 @@
-from habit import Habit
-from tracker import Tracker
-from db import get_db
-from analytics import (get_list_tracked_habits, get_list_habits_same_periodicity,
-                       get_longest_streak_habits, get_longest_streak_habit,
-                       get_current_streak, get_longest_streak)
+from src import Tracker, db, analytics
 from datetime import datetime, timedelta
 import questionary
 import os
 
-tracker = Tracker()
 def cli():
+
+    tracker = Tracker()
 
     user_choices = ["Main", "Test - with already some stored data", "Exit"]
     exit = False
@@ -27,9 +23,9 @@ def cli():
     elif main_choice == user_choices[2]:
         exit = True
 
-    db = get_db(db_name)
+    db_conn = db.get_db(db_name)
 
-    tracker.update_habits(db)
+    tracker.update_habits(db_conn)
 
     choices = ["Create a new habit", "Delete a habit", "Add completed event", "Analyse", "Exit"]
     periodicity_choices = ["daily", "weekly"]
@@ -43,7 +39,7 @@ def cli():
             description = questionary.text("What is the description of the habit?").ask()
             periodicity = questionary.select("What is the periodicity of the habit?",
                                              choices=periodicity_choices).ask()
-            created = tracker.create_habit(db, name, description, periodicity, datetime.now())
+            created = tracker.create_habit(db_conn, name, description, periodicity, datetime.now())
             if created:
                 print(f"Habit {name} created")
             else:
@@ -54,7 +50,7 @@ def cli():
             try:
                 habit_selected = questionary.select("Which habit do you want to delete?",
                                            choices=[habit.name for habit in tracker.habits]).ask()
-                tracker.delete_habit(db, habit_selected)
+                tracker.delete_habit(db_conn, habit_selected)
                 print(f"Habit {habit_selected} deleted")
             except:
                 print("No habits defined")
@@ -69,7 +65,7 @@ def cli():
                 for habit in tracker.habits:
                     if habit.name == habit_selected:
                         day_selected = questionary.select("On which day? (YYYY-MM-DD)", choices=day_choice).ask()
-                        added = habit.add_completed(db, day_selected)
+                        added = habit.add_completed(db_conn, day_selected)
                         if added:
                             print(f"Habit {habit_selected} updated")
                         else:
@@ -81,7 +77,7 @@ def cli():
 
         elif home_choice == choices[3]:
 
-            tracker.update_completed(db)
+            tracker.update_completed(db_conn)
 
             analyse_choices = ["Basic analysis - list of all habits",
                                "Basic analysis - list of habits with the same periodicity",
@@ -95,26 +91,26 @@ def cli():
 
             if analyse_choice == analyse_choices[0]:
                 print("List of all tracked habits")
-                for h in get_list_tracked_habits(tracker):
+                for h in analytics.get_list_tracked_habits(tracker):
                     print("Habit name: ", h)
 
             elif analyse_choice == analyse_choices[1]:
                 periodicity = questionary.select("Which periodicity do you want to analyse?",
                                                 choices=periodicity_choices).ask()
                 print(f"List of habits with periodicity {periodicity}")
-                for h in get_list_habits_same_periodicity(tracker, periodicity):
+                for h in analytics.get_list_habits_same_periodicity(tracker, periodicity):
                     print("Habit name: ", h)
 
             elif analyse_choice == analyse_choices[2]:
                 print("List of longest run streak of all habits")
-                print(f"Longest run streak: {get_longest_streak_habits(tracker)}")
+                print(f"Longest run streak: {analytics.get_longest_streak_habits(tracker)}")
 
             elif analyse_choice == analyse_choices[3]:
                 try:
                     habit_name = questionary.select("Which habit do you want to analyse?",
                                                    choices=[habit.name for habit in tracker.habits]).ask()
                     print(f"Longest run streak for habit {habit_name}")
-                    print(f"Longest run streak: {get_longest_streak_habit(tracker, habit_name)}")
+                    print(f"Longest run streak: {analytics.get_longest_streak_habit(tracker, habit_name)}")
                 except:
                     print("No habits defined")
 
@@ -122,8 +118,8 @@ def cli():
                 for habit in tracker.habits:
                     print(f"Habit name: {habit.name}")
                     print(f"Periodicity: {habit.periodicity}")
-                    print(f"Current streak: {get_current_streak(habit)}")
-                    print(f"Longest streak: {get_longest_streak(habit)}")
+                    print(f"Current streak: {analytics.get_current_streak(habit)}")
+                    print(f"Longest streak: {analytics.get_longest_streak(habit)}")
                     print("_"*30)
 
             elif analyse_choice == analyse_choices[5]:
@@ -133,8 +129,8 @@ def cli():
                     if habit.periodicity == periodicity:
                         print(f"Habit name: {habit.name}")
                         print(f"Periodicity: {habit.periodicity}")
-                        print(f"Current streak: {get_current_streak(habit)}")
-                        print(f"Longest streak: {get_longest_streak(habit)}")
+                        print(f"Current streak: {analytics.get_current_streak(habit)}")
+                        print(f"Longest streak: {analytics.get_longest_streak(habit)}")
                         print("_"*30)
 
             elif analyse_choice == analyse_choices[6]:
@@ -145,8 +141,8 @@ def cli():
                         if habit.name == habit_name:
                             print(f"Habit name: {habit.name}")
                             print(f"Periodicity: {habit.periodicity}")
-                            print(f"Current streak: {get_current_streak(habit)}")
-                            print(f"Longest streak: {get_longest_streak(habit)}")
+                            print(f"Current streak: {analytics.get_current_streak(habit)}")
+                            print(f"Longest streak: {analytics.get_longest_streak(habit)}")
                             print("_" * 30)
                 except:
                     print("No habits defined")
@@ -154,7 +150,7 @@ def cli():
             elif analyse_choice == analyse_choices[7]:
                 longest = 0
                 for habit in tracker.habits:
-                    tmp_longest = get_longest_streak(habit)
+                    tmp_longest = analytics.get_longest_streak(habit)
                     if tmp_longest > longest:
                         longest = tmp_longest
                         habit_name = habit.name
@@ -166,7 +162,7 @@ def cli():
             questionary.press_any_key_to_continue().ask()
 
         elif home_choice == choices[4]:
-            db.close()
+            db_conn.close()
             exit = True
 
         print("Goodbye!")

@@ -1,17 +1,17 @@
-from habit import Habit
-from db import get_habits
+from .habit import Habit
+from .db import get_habits
 
 from datetime import datetime
 class Tracker:
     """
     Class to represent a tracker
     """
-    habits = []
+
     def __init__(self):
         """
         Initialize the tracker
         """
-        pass
+        self.habits = []
 
     def update_habits(self, db):
         """

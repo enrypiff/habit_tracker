@@ -66,6 +66,9 @@ def add_event(db, name, event_date=None):
     cur = db.cursor()
     if not event_date:
         event_date = datetime.datetime.now().date()
+    if type(event_date) is str:
+        event_date = datetime.datetime.strptime(event_date, "%Y-%m-%d").date()
+
     cur.execute("INSERT OR IGNORE INTO records VALUES (?, ?)", (name, event_date))
     db.commit()
 

@@ -53,7 +53,7 @@ def get_current_streak_day(self):
     count = 0
     self.completed.sort(reverse=True)
     for last in self.completed:
-        difference = datetime.now().date() - last.date()
+        difference = datetime.now().date() - last
         if difference == timedelta(days=count):
             count += 1
         elif difference < timedelta(days=count):
@@ -67,10 +67,10 @@ def get_current_streak_week(self):
     self.completed.sort(reverse=True)
     tmp = datetime.now().date()
     for last in self.completed:
-        difference = tmp - last.date()
+        difference = tmp - last
         if (difference >= timedelta(weeks=0)) and (difference < timedelta(weeks=1)):
             count += 1
-            tmp = last.date() - timedelta(last.date().weekday()+1)
+            tmp = last - timedelta(last.weekday()+1)
         elif difference < timedelta(weeks=0):
             pass
         else:
@@ -88,13 +88,13 @@ def get_longest_streak_day(self):
     self.completed.sort(reverse=True)
     most_recent = datetime.now().date()
     for last in self.completed:
-        difference = most_recent - last.date()
+        difference = most_recent - last
         if difference == timedelta(days=count):
             count += 1
         elif difference < timedelta(days=count):
             pass
         else:
-            most_recent = last.date()
+            most_recent = last
             count = 1
         if count > longest:
             longest = count
@@ -105,14 +105,14 @@ def get_longest_streak_week(self):
     self.completed.sort(reverse=True)
     tmp = datetime.now().date()
     for last in self.completed:
-        difference = tmp - last.date()
+        difference = tmp - last
         if (difference >= timedelta(weeks=0)) and (difference < timedelta(weeks=1)):
             count += 1
-            tmp = last.date() - timedelta(last.date().weekday() + 1)
+            tmp = last - timedelta(last.weekday() + 1)
         elif difference < timedelta(weeks=0):
             pass
         else:
-            tmp = last.date() - timedelta(last.date().weekday() + 1)
+            tmp = last - timedelta(last.weekday() + 1)
             count = 1
         if count > longest:
             longest = count
