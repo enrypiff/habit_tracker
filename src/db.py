@@ -22,8 +22,8 @@ def create_tables(db):
     cur.execute("""CREATE TABLE IF NOT EXISTS habits ( name TEXT PRIMARY KEY, description TEXT, periodicity TEXT, created TIMESTAMP, UNIQUE(name))
     """)
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS records ( habit_name TEXT, date TIMESTAMP, 
-    FOREIGN KEY (habit_name) REFERENCES habit(name), UNIQUE(date, habit_name))""")
+    cur.execute("""CREATE TABLE IF NOT EXISTS records ( habit_name TEXT, date DATE, 
+    FOREIGN KEY (habit_name) REFERENCES habits(name), UNIQUE(habit_name, date))""")
 
     db.commit()
 

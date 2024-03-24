@@ -44,7 +44,8 @@ def cli():
                 print(f"Habit {name} created")
             else:
                 print(f"Habit {name} already exists")
-            print("\n")
+
+            questionary.press_any_key_to_continue().ask()
 
         elif home_choice == choices[1]:
             try:
@@ -54,7 +55,8 @@ def cli():
                 print(f"Habit {habit_selected} deleted")
             except:
                 print("No habits defined")
-            print("\n")
+
+            questionary.press_any_key_to_continue().ask()
 
         elif home_choice == choices[2]:
             try:

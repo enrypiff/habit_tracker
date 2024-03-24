@@ -43,6 +43,11 @@ def get_longest_streak_habit(self, habit_name):
 
 
 def get_current_streak(self):
+    """
+    Get current streak of a given habit
+    :param self: instance of Habit
+    :return: value of current streak
+    """
     count = 0
     if self.periodicity == "daily":
         return get_current_streak_day(self)
@@ -50,6 +55,11 @@ def get_current_streak(self):
         return get_current_streak_week(self)
 
 def get_current_streak_day(self):
+    """
+    Get current streak of a given habit with daily periodicity
+    :param self: instance of Habit
+    :return: value of current streak
+    """
     count = 0
     self.completed.sort(reverse=True)
     for last in self.completed:
@@ -63,6 +73,11 @@ def get_current_streak_day(self):
     return count
 
 def get_current_streak_week(self):
+    """
+    Get current streak of a given habit with weekly periodicity
+    :param self: instance of Habit
+    :return: value of current streak
+    """
     count = 0
     self.completed.sort(reverse=True)
     tmp = datetime.now().date()
@@ -78,12 +93,22 @@ def get_current_streak_week(self):
     return count
 
 def get_longest_streak(self):
+    """
+    Get longest streak of a given habit
+    :param self: instance of Habit
+    :return: value of longest streak
+    """
     if self.periodicity == "daily":
         return get_longest_streak_day(self)
     elif self.periodicity == "weekly":
         return get_longest_streak_week(self)
 
 def get_longest_streak_day(self):
+    """
+    Get longest streak of a given habit with daily periodicity
+    :param self: instance of Habit
+    :return: value of longest streak
+    """
     count, longest = 0, 0
     self.completed.sort(reverse=True)
     most_recent = datetime.now().date()
@@ -101,6 +126,11 @@ def get_longest_streak_day(self):
     return longest
 
 def get_longest_streak_week(self):
+    """
+    Get longest streak of a given habit with weekly periodicity
+    :param self: instance of Habit
+    :return: value of longest streak
+    """
     count, longest = 0, 0
     self.completed.sort(reverse=True)
     tmp = datetime.now().date()

@@ -30,10 +30,10 @@ python pytest .
 
 This will run the tests and show you the results.
 
-In the main.db you will find the database that the app uses to store the habits.
-It contains some predefined habits that you can use to test the app.
-If you want to start fresh, you can delete the main.db file and the app will create a new one for you.
+When the app starts running, you will see the following options:
 
+If you select test, the app will use the test_data.db containing some predefined habits with completed days.
+If you select main instead you can use a new database to add your own habits.
 
 
 Enjoy!
